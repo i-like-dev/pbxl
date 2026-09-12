@@ -1,13 +1,8 @@
-# 修正映像檔標籤：改用正式且確定存在的 FreePBX 17 穩定版本
-FROM tirans/freepbx:17-bookworm
+# 改用社群目前最新、完美支援 Zeabur 容器架構的 FreePBX 17 + Asterisk 21 映像檔
+FROM escomputers/freepbx:latest
 
-# 設定環境變數（預設啟用防暴力破解與繁體中文介面）
-ENV ENABLE_FAIL2BAN=true \
-    ADMIN_LANGUAGE=zh_TW
+# 設定必要的自動化變數（預設啟用防暴力破解）
+ENV FAIL2BAN_ENABLE=true
 
-# 暴露雲端總機必要的核心連接埠
-# 80: 網頁管理後台 | 5060: SIP話機註冊埠 | 10000-10020: RTP語音串流通道
+# 暴露雲端總機核心連接埠
 EXPOSE 80/tcp 5060/udp 10000-10020/udp
-
-# 保持映像檔預設的啟動入口點
-ENTRYPOINT ["/entrypoint.sh"]
