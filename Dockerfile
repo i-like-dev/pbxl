@@ -1,5 +1,5 @@
-# 使用目前開源社群維護最新、最穩定的 FreePBX 17 + Asterisk 21 現代介面映像檔
-FROM tirans/freepbx:17
+# 修正映像檔標籤：改用正式且確定存在的 FreePBX 17 穩定版本
+FROM tirans/freepbx:17-bookworm
 
 # 設定環境變數（預設啟用防暴力破解與繁體中文介面）
 ENV ENABLE_FAIL2BAN=true \
