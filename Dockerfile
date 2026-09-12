@@ -1,8 +1,21 @@
-# 改用社群目前最新、完美支援 Zeabur 容器架構的 FreePBX 17 + Asterisk 21 映像檔
-FROM escomputers/freepbx:latest
+FROM alpine:3.18
 
-# 設定必要的自動化變數（預設啟用防暴力破解）
-ENV FAIL2BAN_ENABLE=true
+# 安裝基本的系統依賴、Asterisk 及其相關工具
+RUN apk add --no-cache \
+    asterisk \
+    asterisk-sample-config \
+    asterisk-sounds-moh \
+    asterisk-lang-zh_cn \
+    bash \
+    curl \
+    tzdata
 
-# 暴露雲端總機核心連接埠
-EXPOSE 80/tcp 5060/udp 10000-10020/udp
+# 設定時區為台北時間
+ENV TZ=Asia/Taipei
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# 開放 Asterisk 常用的 SIP (5060/udp) 與網頁或控制埠
+EXPOSE 5060/udp 5060/tcp 8088/tcp
+
+# 啟動 Asterisk 服務（以前景模式運行以配合容器生命週期）
+CMD ["/usr/sbin/asterisk", "-f", "-vvv"]
